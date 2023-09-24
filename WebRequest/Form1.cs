@@ -6,5 +6,14 @@ namespace WebRequest
         {
             InitializeComponent();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void centerSplit_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
     }
 }
