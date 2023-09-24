@@ -56,11 +56,13 @@
             respTextBox = new TextBox();
             respWebTab = new TabPage();
             tabRespHeaders = new TabPage();
-            dataGridView1 = new DataGridView();
+            respHeaderDataTable = new DataGridView();
             respKey = new DataGridViewTextBoxColumn();
             respValue = new DataGridViewTextBoxColumn();
             statusStrip1 = new StatusStrip();
             toolStripProgressBar1 = new ToolStripProgressBar();
+            webStatusLbl = new ToolStripStatusLabel();
+            webWaitTimelbl = new ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -80,7 +82,7 @@
             respBodyTab.SuspendLayout();
             respTextTab.SuspendLayout();
             tabRespHeaders.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)respHeaderDataTable).BeginInit();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -354,7 +356,7 @@
             // 
             // tabRespHeaders
             // 
-            tabRespHeaders.Controls.Add(dataGridView1);
+            tabRespHeaders.Controls.Add(respHeaderDataTable);
             tabRespHeaders.Location = new Point(4, 24);
             tabRespHeaders.Name = "tabRespHeaders";
             tabRespHeaders.Padding = new Padding(3);
@@ -363,31 +365,34 @@
             tabRespHeaders.Text = "Headers";
             tabRespHeaders.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // respHeaderDataTable
             // 
-            dataGridView1.BackgroundColor = SystemColors.Control;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { respKey, respValue });
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(3, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(504, 456);
-            dataGridView1.TabIndex = 0;
+            respHeaderDataTable.BackgroundColor = SystemColors.Control;
+            respHeaderDataTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            respHeaderDataTable.Columns.AddRange(new DataGridViewColumn[] { respKey, respValue });
+            respHeaderDataTable.Dock = DockStyle.Fill;
+            respHeaderDataTable.Location = new Point(3, 3);
+            respHeaderDataTable.Name = "respHeaderDataTable";
+            respHeaderDataTable.ReadOnly = true;
+            respHeaderDataTable.RowTemplate.Height = 25;
+            respHeaderDataTable.Size = new Size(504, 456);
+            respHeaderDataTable.TabIndex = 0;
             // 
             // respKey
             // 
             respKey.HeaderText = "Key";
             respKey.Name = "respKey";
+            respKey.ReadOnly = true;
             // 
             // respValue
             // 
             respValue.HeaderText = "Value";
             respValue.Name = "respValue";
+            respValue.ReadOnly = true;
             // 
             // statusStrip1
             // 
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripProgressBar1 });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripProgressBar1, webStatusLbl, webWaitTimelbl });
             statusStrip1.Location = new Point(0, 490);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(880, 22);
@@ -398,6 +403,16 @@
             // 
             toolStripProgressBar1.Name = "toolStripProgressBar1";
             toolStripProgressBar1.Size = new Size(100, 16);
+            // 
+            // webStatusLbl
+            // 
+            webStatusLbl.Name = "webStatusLbl";
+            webStatusLbl.Size = new Size(0, 17);
+            // 
+            // webWaitTimelbl
+            // 
+            webWaitTimelbl.Name = "webWaitTimelbl";
+            webWaitTimelbl.Size = new Size(0, 17);
             // 
             // requestToolBox
             // 
@@ -429,7 +444,7 @@
             respTextTab.ResumeLayout(false);
             respTextTab.PerformLayout();
             tabRespHeaders.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)respHeaderDataTable).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             ResumeLayout(false);
@@ -453,7 +468,7 @@
         private TabControl tabResponse;
         private TabPage tabRespBody;
         private TabPage tabRespHeaders;
-        private DataGridView dataGridView1;
+        private DataGridView respHeaderDataTable;
         private DataGridViewTextBoxColumn respKey;
         private DataGridViewTextBoxColumn respValue;
         private TabControl respBodyTab;
@@ -470,5 +485,7 @@
         private DataGridViewTextBoxColumn headKey;
         private DataGridViewTextBoxColumn headValue;
         private DataGridViewTextBoxColumn headDescription;
+        private ToolStripStatusLabel webStatusLbl;
+        private ToolStripStatusLabel webWaitTimelbl;
     }
 }

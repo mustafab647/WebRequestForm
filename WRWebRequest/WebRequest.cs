@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
@@ -15,8 +16,9 @@ namespace WRWebRequest
         [NotNull]
         public string Url { get; set; }
         public System.Net.Http.HttpMethod HttpMethod { get; set; }
+        public Dictionary<string, string> QueryParams { get; set; }
         public Dictionary<string, string> Headers { get; set; }
-        public WRWebRequest.WebResponse<TResponse,TError> Response { get; set; }
+        public WRWebRequest.WebResponse<TResponse, TError> Response { get; private set; }
         #endregion
         #endregion
         #region Contructors
@@ -50,23 +52,39 @@ namespace WRWebRequest
                 }
             }
 
-            using (System.Net.WebResponse response = webRequest.GetResponse())
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            try
             {
-                try
+                stopwatch.Start();
+                using (System.Net.WebResponse response = webRequest.GetResponse())
                 {
-                    this.Response.Response = getResponse(response);
-                    if (this.Response == null)
+                    stopwatch.Stop();
+                    try
                     {
-                        this.Response.Error = getError(response);
+
+                        this.Response.Response = getResponse(response);
+                        if (this.Response == null)
+                        {
+                            this.Response.Error = getError(response);
+                        }
+                    }
+                    catch (WebException webException)
+                    {
+                        WebResponse webResponse = webException.Response;
+                        this.Response.Error = getError(webResponse);
                     }
                 }
-                catch(WebException webException)
-                {
-                    WebResponse webResponse = webException.Response;
-                    this.Response.Error = getError(webResponse);
-                }
             }
-
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (stopwatch.IsRunning)
+                    stopwatch.Stop();
+            }
+            this.Response.TimeSpan = new TimeSpan(stopwatch.ElapsedMilliseconds);
         }
         #endregion
 
@@ -103,12 +121,15 @@ namespace WRWebRequest
             { }
             return null;
         }
-        private T getBodyObject<T>(object body, string contentType) where T : class,new()
+        private T getBodyObject<T>(string body, string contentType) where T : class, new()
         {
             if (contentType.Contains("json", StringComparison.OrdinalIgnoreCase))
-            { }
+            { return jsonToObject<T>(body.ToString()); }
             else if (contentType.Contains("xml", StringComparison.OrdinalIgnoreCase))
-            { }
+            {
+                WRWebRequest.Helper.XmlSerializer<T> xmlSerializer = new Helper.XmlSerializer<T>();
+                return xmlSerializer.DeSerialize(body);
+            }
             else { }
             return null;
         }
@@ -135,17 +156,19 @@ namespace WRWebRequest
         private TResponse getResponse(System.Net.WebResponse response)
         {
             TResponse result = null;
+            HttpWebResponse webResponse = ((System.Net.HttpWebResponse)response);
             Stream stream = response.GetResponseStream();
             this.Response.Headers = getHeaders(response);
-            byte[] buffer = new byte[response.ContentLength];
             StreamReader streamReader = new StreamReader(stream);
             string responseText = streamReader.ReadToEnd();
             this.Response.ResponseText = responseText;
-            if(responseText != null)
+            this.Response.StatusCode = webResponse.StatusCode;
+            this.Response.StatusDescription = webResponse.StatusDescription;
+            if (responseText != null)
             {
                 try
                 {
-                    result = getBodyObject<TResponse>(buffer, response.ContentType);
+                    result = getBodyObject<TResponse>(responseText, response.ContentType);
                 }
                 catch { }
             }
@@ -155,15 +178,14 @@ namespace WRWebRequest
         {
             TError result = null;
             Stream stream = webResponse.GetResponseStream();
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, buffer.Length);
-            string responseText = System.Text.UTF8Encoding.UTF8.GetString(buffer);
+            StreamReader streamReader = new StreamReader(stream);
+            string responseText = streamReader.ReadToEnd();
             this.Response.ResponseText = responseText;
             if (responseText != null)
             {
                 try
                 {
-                    result = getBodyObject<TError>(buffer, webResponse.ContentType);
+                    result = getBodyObject<TError>(responseText, webResponse.ContentType);
                 }
                 catch { }
             }

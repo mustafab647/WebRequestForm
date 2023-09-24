@@ -26,6 +26,8 @@ namespace WebRequest.ToolBox
         {
             WRWebRequest.WebRequest<object, object> webRequest = new WRWebRequest.WebRequest<object, object>();
             webRequest.Url = this.reqTextBoxUrl.Text ?? "";
+            webRequest.QueryParams = reqParams();
+            webRequest.Headers = reqHeader();
             string webMethod = cmbReqMethod.Text;
 
             if (webMethod.Equals("Get", StringComparison.OrdinalIgnoreCase))
@@ -41,14 +43,45 @@ namespace WebRequest.ToolBox
             webRequest.Send();
 
             this.respTextBox.Text = webRequest.Response.ResponseText;
+            this.webStatusLbl.Text = $"{webRequest.Response.StatusCode}-{webRequest.Response.StatusDescription}";
+            this.webWaitTimelbl.Text = webRequest.Response.TimeSpan.ToString();
+            setRespHeader(webRequest.Response.Headers);
 
         }
-
-        private Dictionary<string, string> reqHeader()
+        private void setRespHeader(Dictionary<string, string> headers)
+        {
+            if (headers == null)
+                return;
+            foreach (KeyValuePair<string, string> kvp in headers)
+            {
+                this.respHeaderDataTable.Rows.Add(kvp.Key, kvp.Value);
+            }
+        }
+        private Dictionary<string, string> reqParams()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
             DataGridViewRowCollection rows = this.reqParamsDataTable.Rows;
+            if (rows.Count == 1)
+                return result;
+            foreach (DataRow row in rows)
+            {
+                bool enable = Convert.ToBoolean(row["Enable"]);
+                if (enable)
+                {
+                    string key = row["Key"].ToString();
+                    string value = row["Value"].ToString();
+                    result.Add(key, value);
+                }
+            }
+            return result;
+        }
+        private Dictionary<string, string> reqHeader()
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            DataGridViewRowCollection rows = this.headGridDataTable.Rows;
 
+            if (rows.Count == 1)
+                return result;
             foreach (DataRow row in rows)
             {
                 bool enable = Convert.ToBoolean(row["Enable"]);

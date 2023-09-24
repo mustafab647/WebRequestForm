@@ -12,6 +12,9 @@ namespace WRWebRequest
         public TResponse Response { get; set; }
         public TError Error { get; set; }
         public string ContentType { get; set; }
+        public System.Net.HttpStatusCode StatusCode { get; set; }
+        public string StatusDescription { get; set; }
+        public TimeSpan TimeSpan { get; set; }
         public Dictionary<string, string> Headers { get; internal set; }
         public string ResponseText { get; set; }
     }
