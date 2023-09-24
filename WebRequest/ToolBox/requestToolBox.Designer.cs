@@ -36,24 +36,31 @@
             requestTab = new TabControl();
             tabParams = new TabPage();
             reqParamsDataTable = new DataGridView();
+            Enable = new DataGridViewCheckBoxColumn();
             Key = new DataGridViewTextBoxColumn();
             Value = new DataGridViewTextBoxColumn();
             Description = new DataGridViewTextBoxColumn();
             tabAuth = new TabPage();
             tabHeaders = new TabPage();
+            headGridDataTable = new DataGridView();
+            headVisible = new DataGridViewCheckBoxColumn();
+            headKey = new DataGridViewTextBoxColumn();
+            headValue = new DataGridViewTextBoxColumn();
+            headDescription = new DataGridViewTextBoxColumn();
             tabBody = new TabPage();
+            reqTextBox = new TextBox();
             tabResponse = new TabControl();
             tabRespBody = new TabPage();
+            respBodyTab = new TabControl();
+            respTextTab = new TabPage();
+            respTextBox = new TextBox();
+            respWebTab = new TabPage();
             tabRespHeaders = new TabPage();
             dataGridView1 = new DataGridView();
             respKey = new DataGridViewTextBoxColumn();
             respValue = new DataGridViewTextBoxColumn();
             statusStrip1 = new StatusStrip();
             toolStripProgressBar1 = new ToolStripProgressBar();
-            respBodyTab = new TabControl();
-            respTextTab = new TabPage();
-            respWebTab = new TabPage();
-            respTextBox = new TextBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -65,13 +72,16 @@
             requestTab.SuspendLayout();
             tabParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)reqParamsDataTable).BeginInit();
+            tabHeaders.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)headGridDataTable).BeginInit();
+            tabBody.SuspendLayout();
             tabResponse.SuspendLayout();
             tabRespBody.SuspendLayout();
+            respBodyTab.SuspendLayout();
+            respTextTab.SuspendLayout();
             tabRespHeaders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             statusStrip1.SuspendLayout();
-            respBodyTab.SuspendLayout();
-            respTextTab.SuspendLayout();
             SuspendLayout();
             // 
             // splitContainer1
@@ -113,6 +123,7 @@
             btnSend.TabIndex = 1;
             btnSend.Text = "Send";
             btnSend.UseVisualStyleBackColor = true;
+            btnSend.Click += btnSend_Click;
             // 
             // cmbReqMethod
             // 
@@ -169,7 +180,7 @@
             // 
             reqParamsDataTable.BackgroundColor = SystemColors.ButtonFace;
             reqParamsDataTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            reqParamsDataTable.Columns.AddRange(new DataGridViewColumn[] { Key, Value, Description });
+            reqParamsDataTable.Columns.AddRange(new DataGridViewColumn[] { Enable, Key, Value, Description });
             reqParamsDataTable.Dock = DockStyle.Fill;
             reqParamsDataTable.GridColor = SystemColors.Control;
             reqParamsDataTable.Location = new Point(3, 3);
@@ -178,9 +189,16 @@
             reqParamsDataTable.Size = new Size(344, 456);
             reqParamsDataTable.TabIndex = 0;
             // 
+            // Enable
+            // 
+            Enable.HeaderText = "Enable";
+            Enable.Name = "Enable";
+            Enable.Resizable = DataGridViewTriState.True;
+            Enable.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
             // Key
             // 
-            Key.HeaderText = "key";
+            Key.HeaderText = "Key";
             Key.Name = "Key";
             // 
             // Value
@@ -205,6 +223,7 @@
             // 
             // tabHeaders
             // 
+            tabHeaders.Controls.Add(headGridDataTable);
             tabHeaders.Location = new Point(4, 24);
             tabHeaders.Name = "tabHeaders";
             tabHeaders.Padding = new Padding(3);
@@ -213,14 +232,61 @@
             tabHeaders.Text = "Headers";
             tabHeaders.UseVisualStyleBackColor = true;
             // 
+            // headGridDataTable
+            // 
+            headGridDataTable.BackgroundColor = SystemColors.Control;
+            headGridDataTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            headGridDataTable.Columns.AddRange(new DataGridViewColumn[] { headVisible, headKey, headValue, headDescription });
+            headGridDataTable.Dock = DockStyle.Fill;
+            headGridDataTable.GridColor = SystemColors.Control;
+            headGridDataTable.Location = new Point(3, 3);
+            headGridDataTable.Name = "headGridDataTable";
+            headGridDataTable.RowTemplate.Height = 25;
+            headGridDataTable.Size = new Size(344, 456);
+            headGridDataTable.TabIndex = 0;
+            // 
+            // headVisible
+            // 
+            headVisible.Frozen = true;
+            headVisible.HeaderText = "Visible";
+            headVisible.Name = "headVisible";
+            // 
+            // headKey
+            // 
+            headKey.Frozen = true;
+            headKey.HeaderText = "Key";
+            headKey.Name = "headKey";
+            // 
+            // headValue
+            // 
+            headValue.Frozen = true;
+            headValue.HeaderText = "Value";
+            headValue.Name = "headValue";
+            // 
+            // headDescription
+            // 
+            headDescription.Frozen = true;
+            headDescription.HeaderText = "Description";
+            headDescription.Name = "headDescription";
+            // 
             // tabBody
             // 
+            tabBody.Controls.Add(reqTextBox);
             tabBody.Location = new Point(4, 24);
             tabBody.Name = "tabBody";
             tabBody.Size = new Size(350, 462);
             tabBody.TabIndex = 3;
             tabBody.Text = "Body";
             tabBody.UseVisualStyleBackColor = true;
+            // 
+            // reqTextBox
+            // 
+            reqTextBox.Dock = DockStyle.Fill;
+            reqTextBox.Location = new Point(0, 0);
+            reqTextBox.Multiline = true;
+            reqTextBox.Name = "reqTextBox";
+            reqTextBox.Size = new Size(350, 462);
+            reqTextBox.TabIndex = 0;
             // 
             // tabResponse
             // 
@@ -243,6 +309,48 @@
             tabRespBody.TabIndex = 0;
             tabRespBody.Text = "Body";
             tabRespBody.UseVisualStyleBackColor = true;
+            // 
+            // respBodyTab
+            // 
+            respBodyTab.Controls.Add(respTextTab);
+            respBodyTab.Controls.Add(respWebTab);
+            respBodyTab.Dock = DockStyle.Fill;
+            respBodyTab.Location = new Point(3, 3);
+            respBodyTab.Name = "respBodyTab";
+            respBodyTab.SelectedIndex = 0;
+            respBodyTab.Size = new Size(504, 456);
+            respBodyTab.TabIndex = 0;
+            // 
+            // respTextTab
+            // 
+            respTextTab.Controls.Add(respTextBox);
+            respTextTab.Location = new Point(4, 24);
+            respTextTab.Name = "respTextTab";
+            respTextTab.Padding = new Padding(3);
+            respTextTab.Size = new Size(496, 428);
+            respTextTab.TabIndex = 0;
+            respTextTab.Text = "Response Text";
+            respTextTab.UseVisualStyleBackColor = true;
+            // 
+            // respTextBox
+            // 
+            respTextBox.Dock = DockStyle.Fill;
+            respTextBox.Location = new Point(3, 3);
+            respTextBox.Multiline = true;
+            respTextBox.Name = "respTextBox";
+            respTextBox.ScrollBars = ScrollBars.Both;
+            respTextBox.Size = new Size(490, 422);
+            respTextBox.TabIndex = 0;
+            // 
+            // respWebTab
+            // 
+            respWebTab.Location = new Point(4, 24);
+            respWebTab.Name = "respWebTab";
+            respWebTab.Padding = new Padding(3);
+            respWebTab.Size = new Size(496, 428);
+            respWebTab.TabIndex = 1;
+            respWebTab.Text = "Response Web";
+            respWebTab.UseVisualStyleBackColor = true;
             // 
             // tabRespHeaders
             // 
@@ -291,48 +399,6 @@
             toolStripProgressBar1.Name = "toolStripProgressBar1";
             toolStripProgressBar1.Size = new Size(100, 16);
             // 
-            // respBodyTab
-            // 
-            respBodyTab.Controls.Add(respTextTab);
-            respBodyTab.Controls.Add(respWebTab);
-            respBodyTab.Dock = DockStyle.Fill;
-            respBodyTab.Location = new Point(3, 3);
-            respBodyTab.Name = "respBodyTab";
-            respBodyTab.SelectedIndex = 0;
-            respBodyTab.Size = new Size(504, 456);
-            respBodyTab.TabIndex = 0;
-            respBodyTab.Visible = false;
-            // 
-            // respTextTab
-            // 
-            respTextTab.Controls.Add(respTextBox);
-            respTextTab.Location = new Point(4, 24);
-            respTextTab.Name = "respTextTab";
-            respTextTab.Padding = new Padding(3);
-            respTextTab.Size = new Size(496, 428);
-            respTextTab.TabIndex = 0;
-            respTextTab.Text = "Response Text";
-            respTextTab.UseVisualStyleBackColor = true;
-            // 
-            // respWebTab
-            // 
-            respWebTab.Location = new Point(4, 24);
-            respWebTab.Name = "respWebTab";
-            respWebTab.Padding = new Padding(3);
-            respWebTab.Size = new Size(496, 428);
-            respWebTab.TabIndex = 1;
-            respWebTab.Text = "Response Web";
-            respWebTab.UseVisualStyleBackColor = true;
-            // 
-            // respTextBox
-            // 
-            respTextBox.Dock = DockStyle.Fill;
-            respTextBox.Location = new Point(3, 3);
-            respTextBox.Multiline = true;
-            respTextBox.Name = "respTextBox";
-            respTextBox.Size = new Size(490, 422);
-            respTextBox.TabIndex = 0;
-            // 
             // requestToolBox
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -353,15 +419,19 @@
             requestTab.ResumeLayout(false);
             tabParams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)reqParamsDataTable).EndInit();
+            tabHeaders.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)headGridDataTable).EndInit();
+            tabBody.ResumeLayout(false);
+            tabBody.PerformLayout();
             tabResponse.ResumeLayout(false);
             tabRespBody.ResumeLayout(false);
+            respBodyTab.ResumeLayout(false);
+            respTextTab.ResumeLayout(false);
+            respTextTab.PerformLayout();
             tabRespHeaders.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
-            respBodyTab.ResumeLayout(false);
-            respTextTab.ResumeLayout(false);
-            respTextTab.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -380,9 +450,6 @@
         private TabPage tabHeaders;
         private TabPage tabBody;
         private DataGridView reqParamsDataTable;
-        private DataGridViewTextBoxColumn Key;
-        private DataGridViewTextBoxColumn Value;
-        private DataGridViewTextBoxColumn Description;
         private TabControl tabResponse;
         private TabPage tabRespBody;
         private TabPage tabRespHeaders;
@@ -393,5 +460,15 @@
         private TabPage respTextTab;
         private TextBox respTextBox;
         private TabPage respWebTab;
+        private TextBox reqTextBox;
+        private DataGridViewCheckBoxColumn Enable;
+        private DataGridViewTextBoxColumn Key;
+        private DataGridViewTextBoxColumn Value;
+        private DataGridViewTextBoxColumn Description;
+        private DataGridView headGridDataTable;
+        private DataGridViewCheckBoxColumn headVisible;
+        private DataGridViewTextBoxColumn headKey;
+        private DataGridViewTextBoxColumn headValue;
+        private DataGridViewTextBoxColumn headDescription;
     }
 }
