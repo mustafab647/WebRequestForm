@@ -4,9 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.Media.Core;
+using Windows.Security.Authentication.Web.Provider;
+using WRWebRequest;
 
 namespace WebRequest.ToolBox
 {
@@ -17,13 +21,9 @@ namespace WebRequest.ToolBox
             InitializeComponent();
         }
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
         private void btnSend_Click(object sender, EventArgs e)
         {
+            stripProgress.Value = 0;
             WRWebRequest.WebRequest<object, object> webRequest = new WRWebRequest.WebRequest<object, object>();
             webRequest.Url = this.reqTextBoxUrl.Text ?? "";
             webRequest.QueryParams = reqParams();
@@ -40,13 +40,35 @@ namespace WebRequest.ToolBox
                 webRequest.HttpMethod = HttpMethod.Delete;
             else if (webMethod.Equals("Head", StringComparison.OrdinalIgnoreCase))
                 webRequest.HttpMethod = HttpMethod.Head;
+            stripProgress.Value = 25;
             webRequest.Send();
+            stripProgress.Value = 50;
+            setResponse(webRequest.Response);
+            stripProgress.Value = 75;
+            if (webRequest.Response.StatusCode == System.Net.HttpStatusCode.OK)
+                statusStrip1.BackColor = Color.AliceBlue;
+            else if ((int)webRequest.Response.StatusCode >= 400 && (int)webRequest.Response.StatusCode <= 599)
+                statusStrip1.BackColor = Color.Red;
+            else
+                statusStrip1.BackColor = Color.Yellow;
+            stripProgress.Value = 100;
+        }
 
-            this.respTextBox.Text = webRequest.Response.ResponseText;
-            this.webStatusLbl.Text = $"{webRequest.Response.StatusCode}-{webRequest.Response.StatusDescription}";
-            this.webWaitTimelbl.Text = webRequest.Response.TimeSpan.ToString();
-            setRespHeader(webRequest.Response.Headers);
+        private async void setResponse<TResponse, TError>(WRWebRequest.WebResponse<TResponse, TError> webResponse) where TResponse : class, new() where TError: class, new()
+        {
+            this.respTextBox.Text = webResponse.ResponseText;
+            try
+            {
+                Microsoft.Web.WebView2.Core.CoreWebView2Environment coreWebView2Environment = Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync().Result;
+                //Microsoft.Web.WebView2.Core.CoreWebView2 coreWebView2 = new();
+                await this.responseWebView.EnsureCoreWebView2Async(coreWebView2Environment);
 
+                this.responseWebView.CoreWebView2.NavigateToString(webResponse.ResponseText);
+            }
+            catch(Exception) { }
+            this.webStatusLbl.Text = $"{webResponse.StatusCode}-{webResponse.StatusDescription}";
+            this.webWaitTimelbl.Text = webResponse.TimeSpan.ToString();
+            setRespHeader(webResponse.Headers);
         }
         private void setRespHeader(Dictionary<string, string> headers)
         {

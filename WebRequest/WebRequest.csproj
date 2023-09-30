@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2045.28" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WRWebRequest\WRWebRequest.csproj" />
   </ItemGroup>
 

@@ -60,9 +60,10 @@
             respKey = new DataGridViewTextBoxColumn();
             respValue = new DataGridViewTextBoxColumn();
             statusStrip1 = new StatusStrip();
-            toolStripProgressBar1 = new ToolStripProgressBar();
+            stripProgress = new ToolStripProgressBar();
             webStatusLbl = new ToolStripStatusLabel();
             webWaitTimelbl = new ToolStripStatusLabel();
+            responseWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -81,9 +82,11 @@
             tabRespBody.SuspendLayout();
             respBodyTab.SuspendLayout();
             respTextTab.SuspendLayout();
+            respWebTab.SuspendLayout();
             tabRespHeaders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)respHeaderDataTable).BeginInit();
             statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)responseWebView).BeginInit();
             SuspendLayout();
             // 
             // splitContainer1
@@ -106,7 +109,6 @@
             splitContainer1.Size = new Size(880, 545);
             splitContainer1.SplitterDistance = 29;
             splitContainer1.TabIndex = 0;
-            splitContainer1.SplitterMoved += splitContainer1_SplitterMoved;
             // 
             // reqTextBoxUrl
             // 
@@ -346,6 +348,7 @@
             // 
             // respWebTab
             // 
+            respWebTab.Controls.Add(responseWebView);
             respWebTab.Location = new Point(4, 24);
             respWebTab.Name = "respWebTab";
             respWebTab.Padding = new Padding(3);
@@ -392,17 +395,17 @@
             // 
             // statusStrip1
             // 
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripProgressBar1, webStatusLbl, webWaitTimelbl });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { stripProgress, webStatusLbl, webWaitTimelbl });
             statusStrip1.Location = new Point(0, 490);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(880, 22);
             statusStrip1.TabIndex = 0;
             statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripProgressBar1
+            // stripProgress
             // 
-            toolStripProgressBar1.Name = "toolStripProgressBar1";
-            toolStripProgressBar1.Size = new Size(100, 16);
+            stripProgress.Name = "stripProgress";
+            stripProgress.Size = new Size(100, 16);
             // 
             // webStatusLbl
             // 
@@ -413,6 +416,18 @@
             // 
             webWaitTimelbl.Name = "webWaitTimelbl";
             webWaitTimelbl.Size = new Size(0, 17);
+            // 
+            // responseWebView
+            // 
+            responseWebView.AllowExternalDrop = true;
+            responseWebView.CreationProperties = null;
+            responseWebView.DefaultBackgroundColor = Color.Transparent;
+            responseWebView.Dock = DockStyle.Fill;
+            responseWebView.Location = new Point(3, 3);
+            responseWebView.Name = "responseWebView";
+            responseWebView.Size = new Size(490, 422);
+            responseWebView.TabIndex = 0;
+            responseWebView.ZoomFactor = 1D;
             // 
             // requestToolBox
             // 
@@ -443,10 +458,12 @@
             respBodyTab.ResumeLayout(false);
             respTextTab.ResumeLayout(false);
             respTextTab.PerformLayout();
+            respWebTab.ResumeLayout(false);
             tabRespHeaders.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)respHeaderDataTable).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)responseWebView).EndInit();
             ResumeLayout(false);
         }
 
@@ -457,7 +474,7 @@
         private TextBox reqTextBoxUrl;
         private Button btnSend;
         private StatusStrip statusStrip1;
-        private ToolStripProgressBar toolStripProgressBar1;
+        private ToolStripProgressBar stripProgress;
         private SplitContainer splitContainer2;
         private TabControl requestTab;
         private TabPage tabParams;
@@ -487,5 +504,6 @@
         private DataGridViewTextBoxColumn headDescription;
         private ToolStripStatusLabel webStatusLbl;
         private ToolStripStatusLabel webWaitTimelbl;
+        private Microsoft.Web.WebView2.WinForms.WebView2 responseWebView;
     }
 }

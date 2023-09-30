@@ -61,19 +61,20 @@ namespace WRWebRequest
                     stopwatch.Stop();
                     try
                     {
-
-                        this.Response.Response = getResponse(response);
-                        if (this.Response == null)
-                        {
-                            this.Response.Error = getError(response);
-                        }
+                        getWebResponse(response);
                     }
                     catch (WebException webException)
                     {
-                        WebResponse webResponse = webException.Response;
-                        this.Response.Error = getError(webResponse);
+                        getWebResponse(webException.Response);
                     }
                 }
+            }
+            catch (WebException webEx)
+            {
+                object? httpStatuResp = null;
+                if (Enum.TryParse(typeof(HttpStatusCode), webEx.Status.ToString(), out httpStatuResp))
+                    this.Response.StatusCode = (HttpStatusCode)httpStatuResp;
+                getWebResponse(webEx.Response);
             }
             catch (Exception ex)
             {
@@ -89,6 +90,14 @@ namespace WRWebRequest
         #endregion
 
         #region Private Methods
+        private void getWebResponse(WebResponse response)
+        {
+            this.Response.Response = getResponse(response);
+            if (this.Response == null)
+            {
+                this.Response.Error = getError(response);
+            }
+        }
         private System.Net.WebHeaderCollection getHeaders(Dictionary<string, string> headers)
         {
             System.Net.WebHeaderCollection result = new System.Net.WebHeaderCollection();
